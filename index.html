@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BudgetBuddy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+  <style>
+    /* Verhindert horizontales Scrollen */
+    html, body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      overflow-x: hidden;
+      width: 100%;
+    }
+
+    .header-image {
+      height: 100vh;
+      width: 100%;
+      object-fit: cover;
+      filter: brightness(50%);
+    }
+
+    .container {
+      position: absolute;
+      top: 16px;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+    }
+
+    .logo {
+      width: 120px;
+      height: auto;
+    }
+
+    .menu {
+      display: flex;
+      gap: 16px;
+    }
+
+    .menu-link {
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .menu-link:hover {
+      text-decoration: underline;
+    }
+
+    .headline {
+      position: absolute;
+      left: 50px;
+      top: 300px;
+      color: white;
+      font-size: 70px;
+      width: 500px;
+      text-shadow: 5px 10px 5px rgba(0, 0, 0, 0.4);
+    }
+
+    .yellow {
+      color: yellow;
+    }
+
+    .description-section {
+      padding: 30px 100px;
+      display: flex;
+      gap: 50px;
+      margin-top: 100px;
+    }
+
+    .description-text {
+      width: 50%;
+      font-size: 18px;
+      line-height: 1.6;
+      color: #444;
+    }
+
+    .button {
+      background-color: yellow;
+      padding: 8px 30px;
+      color: black;
+      border-radius: 8px;
+      box-shadow: 5px 10px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .half-width {
+      width: 50%;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 45px;
+    }
+
+    /* Eingabefeld Container */
+    .input-container {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+    }
+
+    .input-field {
+      padding: 8px;
+      font-size: 16px;
+      margin: 8px 0;
+      border-radius: 5px;
+    }
+
+    .negative {
+      color: red;
+    }
+
+    .positive {
+      color: green;
+    }
+
+    /* Footer style */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #333;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <img class="header-image" src="img/background.jpg" alt="Hintergrundbild">
+  
+  <div class="container">
+    <!-- Logo -->
+    <img src="img/Logo.png" class="logo" alt="Logo">
+
+    <!-- Navigationslinks -->
+    <div class="menu">
+      <a class="menu-link" href="index.html">Home</a>
+      <a class="menu-link" href="kontakt.html">Kontakt</a>
+      <a class="menu-link" href="impressum.html">Impressum</a>
+      <!-- Login Link mit JavaScript -->
+      <a class="menu-link button" href="#" onclick="window.open('login.html', '_self');">Login</a>
+    </div>
+  </div>
+
+  <h1 class="headline">Wollen Sie ganz einfach <span class="yellow">Ihre Sparziele</span> erreichen?</h1>
+  
+  <h2>Geben Sie Ihre finanziellen Daten ein!</h2>
+
+  <div class="description-section">
+    <div class="description-text">
+      Geben Sie Ihre regelmäßigen Einnahmen und Ausgaben ein. 
+    </div>
+
+    <div class="half-width">
+      <div class="input-container">
+        <label for="einnahmen">Einnahmen (CHF):</label>
+        <input type="number" id="einnahmen" class="input-field" placeholder="Einnahmen eingeben">
+      </div>
+
+      <div class="input-container">
+        <label for="ausgaben">Ausgaben (CHF):</label>
+        <input type="number" id="ausgaben" class="input-field" placeholder="Ausgaben eingeben">
+      </div>
+
+      <div class="input-container">
+        <button onclick="berechneBudget()" class="button">Berechne Budget</button>
+      </div>
+
+      <div id="result"></div>
+
+      <div class="input-container">
+        <label for="sparziel">Sparziel (CHF):</label>
+        <input type="number" id="sparziel" class="input-field" placeholder="Sparziel eingeben">
+      </div>
+
+      <div class="input-container">
+        <label for="zeitraum">Zeitraum (Monate):</label>
+        <input type="number" id="zeitraum" class="input-field" placeholder="Zeitraum in Monaten">
+      </div>
+
+      <div>
+        <button onclick="berechneSparziel()" class="button">Berechne Sparziel</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2024 BudgetBuddy. Alle Rechte vorbehalten.</p>
+  </footer>
+
+  <script>
+    function berechneBudget() {
+      const einnahmen = parseFloat(document.getElementById('einnahmen').value);
+      const ausgaben = parseFloat(document.getElementById('ausgaben').value);
+
+      if (isNaN(einnahmen) || isNaN(ausgaben)) {
+        alert("Bitte geben Sie sowohl Einnahmen als auch Ausgaben ein!");
+        return;
+      }
+
+      let saldo = einnahmen - ausgaben;
+      let resultText = "Verfügbares Budget: CHF " + saldo.toFixed(2);
+      let resultClass = saldo >= 0 ? "positive" : "negative";
+
+      document.getElementById('result').innerHTML = `<p class="${resultClass}">${resultText}</p>`;
+    }
+
+    function berechneSparziel() {
+      const sparziel = parseFloat(document.getElementById('sparziel').value);
+      const zeitraum = parseInt(document.getElementById('zeitraum').value);
+
+      if (isNaN(sparziel) || isNaN(zeitraum) || zeitraum <= 0) {
+        alert("Bitte geben Sie ein gültiges Sparziel und einen Zeitraum ein!");
+        return;
+      }
+
+      let monatlichSparen = sparziel / zeitraum;
+      let resultText = `Um Ihr Sparziel von CHF ${sparziel} in ${zeitraum} Monaten zu erreichen, müssen Sie monatlich CHF ${monatlichSparen.toFixed(2)} sparen.`;
+
+      document.getElementById('result').innerHTML = `<p class="positive">${resultText}</p>`;
+    }
+  </script>
+</body>
+</html>
